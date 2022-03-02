@@ -1,0 +1,24 @@
+#cloud-config
+users:
+  - name: murmur-admin
+    gecos: murmur-admin
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ${ssh_public_key}
+
+timezone: Europe/Berlin
+
+package_update: true
+
+packages:
+  - murmur
+
+runcmd:
+  - systemctl enable murmur
+  - murmurd -supw ${murmur_su_passwort}
+
+power_state:
+  mode: reboot
