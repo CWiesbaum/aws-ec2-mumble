@@ -34,7 +34,7 @@ data "template_cloudinit_config" "config" {
 
 resource "aws_instance" "murmur-server" {
   ami           = "ami-0b2a401a8b3f4edd3"
-  instance_type = "t2.small"
+  instance_type = "t2.micro"
   user_data_base64 = "${data.template_cloudinit_config.config.rendered}"
 
   tags = {
