@@ -15,10 +15,12 @@ package_update: true
 
 packages:
   - murmur
+  - dnf-automatic
 
 runcmd:
   - systemctl enable murmur
   - murmurd -supw ${murmur_su_passwort}
+  - systemctl enable --now dnf-automatic-install.timer
 
 power_state:
   mode: reboot
