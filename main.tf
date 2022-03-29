@@ -12,15 +12,6 @@ provider "aws" {
   region  = "eu-central-1"
 }
 
-data "template_file" "cloud_init_config" {
-    template = file("./scripts/cloud-init.yaml")
-
-    vars = {
-      ssh_public_key = file(var.ssh_public_key)
-      murmur_su_passwort = var.murmur_su_passwort
-    }
-}
-
 data "template_cloudinit_config" "config" {
   gzip          = true
   base64_encode = true
@@ -28,12 +19,19 @@ data "template_cloudinit_config" "config" {
   part {
     filename     = "cloud-init.yaml"
     content_type = "text/cloud-config"
-    content      = "${data.template_file.cloud_init_config.rendered}"
+    content      = templatefile(
+        "./scripts/cloud-init.yaml",
+        {
+          ssh_public_key = file(var.ssh_public_key_location),
+          murmur_su_password = var.murmur_su_password,
+          murmur_config_gzipb64 = base64gzip(file(var.murmur_config_location))
+        }
+      )
   }
 }
 
 resource "aws_instance" "murmur-server" {
-  ami           = "ami-0b2a401a8b3f4edd3"
+  ami           = "ami-05983e3aff3bf44ba"
   instance_type = "t2.micro"
   user_data_base64 = "${data.template_cloudinit_config.config.rendered}"
 

@@ -21,10 +21,10 @@ Currently an AWS EC2 t2.micro instance using terraform defaults is created. To r
 aws configure
 ```
 
-2. Run terraform script providing your SSH Public Key location (defaults to: ~/.ssh/id_rsa.pub) and Murmur SuperUser password
+2. Run terraform script providing your SSH Public Key location (defaults to: ~/.ssh/id_rsa.pub), Murmur config location (defaults to: ./scripts/murmur-server.ini) and Murmur SuperUser password
 
 ```
-terraform apply -var "ssh_public_key=<PATH TO PUBLIC KEY>" -var "murmur_su_passwort=<SUPERUSERPW>"
+terraform apply -var "ssh_public_key_location=<PATH TO PUBLIC KEY>" -var "murmur_config_location=<PATH TO MURMUR CONFIG LOCATION>" -var "murmur_su_passwort=<SUPERUSERPW>"
 ```
 
 # License

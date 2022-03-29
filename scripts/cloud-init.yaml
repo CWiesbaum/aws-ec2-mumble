@@ -17,10 +17,21 @@ packages:
   - murmur
   - dnf-automatic
 
+# "write_files" is executed before "users" and "packages"
+# The file has to be written to its final destination after "users" and "packages"
+# "runcmd" is executed at a later stage and used to copy the file to persistent storag (see below)
+# Can be solved with "write_files" "defer" option if cloud-init version >= 21.4
+write_files:
+- encoding: gzip+base64
+  content: ${murmur_config_gzipb64}
+  path: /run/ec2config/murmur.ini
+  permissions: '0664'
+
 runcmd:
   - systemctl enable murmur
-  - murmurd -supw ${murmur_su_passwort}
+  - murmurd -supw ${murmur_su_password}
   - systemctl enable --now dnf-automatic-install.timer
+  - cp /run/ec2config/murmur.ini /etc/murmur/murmur.ini && chown mumble-server:mumble-server /etc/murmur/murmur.ini
 
 power_state:
   mode: reboot
