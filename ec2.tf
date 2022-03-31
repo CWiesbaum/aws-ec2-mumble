@@ -22,10 +22,14 @@ resource "aws_instance" "murmur-server" {
   availability_zone = "eu-central-1a"
   user_data_base64 = "${data.template_cloudinit_config.config.rendered}"
 
+  security_groups = [
+      "${aws_security_group.murmur-server-sg.name}"
+  ]
+
   root_block_device {
     delete_on_termination = false
     encrypted = false
-    volume_size = 2
+    volume_size = 5
     volume_type = "gp2"
     tags = {
         Name = "MurmurServer"
